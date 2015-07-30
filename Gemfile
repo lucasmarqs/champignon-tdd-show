@@ -22,6 +22,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'terminal-notifier-guard'
   gem 'guard-rspec'
+  gem 'shoulda-matchers'
 end
 
 group :development do
