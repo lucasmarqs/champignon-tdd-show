@@ -3,5 +3,6 @@ Rails.application.routes.draw do
 
   namespace :blogs do
     root 'posts#index'
+    get 'posts/new', to: 'posts#new'
   end
 end
