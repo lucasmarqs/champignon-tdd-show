@@ -1,4 +1,6 @@
 class Blogs::PostsController < BlogsController
+  before_action :set_post, only: [:show, :edit]
+  before_action :authenticate_user!, only: [:create, :new, :edit]
 
   def index
     @posts = Post.all
@@ -17,13 +19,18 @@ class Blogs::PostsController < BlogsController
     end
   end
 
-  def show
-    @post = Post.find(params[:id])
-  end
+  def show; end
 
+  def edit
+    render :index if current_user.id != @post.user.id
+  end
 
   private
   def post_params
     params.require(:post).permit(:title, :content, :user_id)
+  end
+
+  def set_post
+    @post = Post.find(params[:id])
   end
 end

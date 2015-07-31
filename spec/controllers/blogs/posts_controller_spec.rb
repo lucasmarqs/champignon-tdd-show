@@ -51,6 +51,9 @@ RSpec.describe Blogs::PostsController, :type => :controller do
   end
  
   context 'when #create' do
+
+    before { sign_in user }
+
     context 'with params' do
       it do
         is_expected.to permit(:title, 
@@ -90,7 +93,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
 
   context 'when #show' do
 
-    before { get :show, id: saved_post.id }
+    before { get :show, id: saved_post }
 
     it 'assigns @post' do
       expect(assigns(:post)).to eq(saved_post)
@@ -100,6 +103,37 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       render_views
 
       it { is_expected.to render_template :show }
+    end
+  end
+
+  context 'when #edit' do
+    
+    subject { get :edit, id: saved_post }
+
+    context 'when current user matches to post' do
+
+      before { sign_in saved_post.user }
+
+      it 'assigns @post' do
+        get :edit, id: saved_post
+        expect(assigns(:post)).to eq(saved_post)
+      end
+
+      context 'when rendering views' do
+
+        render_views
+
+        it { is_expected.to render_template :edit }
+      end
+    end
+
+    context 'when current user doesn\'t match to post' do
+
+      before { sign_in user}
+
+      it 'renders #index' do
+        expect(subject).to render_template :index
+      end
     end
   end
 end
