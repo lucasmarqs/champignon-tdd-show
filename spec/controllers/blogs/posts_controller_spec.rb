@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Blogs::PostsController, :type => :controller do
 
   let(:user){ create(:user) }
+  let(:saved_post){ create(:post) }
 
   context 'when #index' do
     subject { get :index }
@@ -73,6 +74,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     end
 
     context 'with invalid attributes' do
+
       it 'doesn\'t create post' do
         expect do
           post :create, post: attributes_for(:post).except(:title)
@@ -83,6 +85,21 @@ RSpec.describe Blogs::PostsController, :type => :controller do
         post :create, post: attributes_for(:post).except(:title)
         expect(response).to render_template(:new)
       end
+    end
+  end
+
+  context 'when #show' do
+
+    before { get :show, id: saved_post.id }
+
+    it 'assigns @post' do
+      expect(assigns(:post)).to eq(saved_post)
+    end
+
+    context 'when rendering views' do
+      render_views
+
+      it { is_expected.to render_template :show }
     end
   end
 end
