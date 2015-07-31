@@ -1,5 +1,5 @@
 class Blogs::PostsController < BlogsController
-  before_action :set_post, only: [:show, :edit, :update]
+  before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   before_action :authenticate_user!, only: [:create, :new, :edit]
 
@@ -23,7 +23,8 @@ class Blogs::PostsController < BlogsController
   def show; end
 
   def edit
-    render :index if current_user.id != @post.user.id
+    render :index unless @post
+    render :index if @post and current_user.id != @post.user.id
   end
 
   def update
@@ -34,12 +35,17 @@ class Blogs::PostsController < BlogsController
     end
   end
 
+  def destroy
+    @post.destroy if current_user.id == @post.id
+    redirect_to blogs_root_path
+  end
+
   private
   def post_params
     params.require(:post).permit(:title, :content, :user_id)
   end
 
   def set_post
-    @post = Post.find(params[:id])
+    @post = Post.find_by(id: params[:id])
   end
 end

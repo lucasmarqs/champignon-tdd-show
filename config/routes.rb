@@ -8,5 +8,6 @@ Rails.application.routes.draw do
     get 'posts/edit/:id', to: 'posts#edit'
     post 'posts', to: 'posts#create'
     patch 'posts', to: 'posts#update'
+    delete 'posts/:id', to: 'posts#destroy'
   end
 end

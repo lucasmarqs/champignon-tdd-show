@@ -107,33 +107,42 @@ RSpec.describe Blogs::PostsController, :type => :controller do
   end
 
   context 'when #edit' do
-    
-    subject { get :edit, id: saved_post }
+    context 'when post exists' do
+      
+      subject { get :edit, id: saved_post }
 
-    context 'when current user matches to post' do
+      context 'when current user matches to post' do
 
-      before { sign_in saved_post.user }
+        before { sign_in saved_post.user }
 
-      it 'assigns @post' do
-        get :edit, id: saved_post
-        expect(assigns(:post)).to eq(saved_post)
+        it 'assigns @post' do
+          get :edit, id: saved_post
+          expect(assigns(:post)).to eq(saved_post)
+        end
+
+        context 'when rendering views' do
+          render_views
+
+          it { is_expected.to render_template :edit }
+        end
       end
 
-      context 'when rendering views' do
+      context 'when current user doesn\'t match to post' do
 
-        render_views
+        before { sign_in user }
 
-        it { is_expected.to render_template :edit }
+        it 'renders #index' do
+          expect(subject).to render_template :index
+        end
       end
     end
 
-    context 'when current user doesn\'t match to post' do
+    context 'when post does\'t exist' do
+      before { sign_in user }
+      
+      subject { get :edit, id: Faker::Number.number(10) }
 
-      before { sign_in user}
-
-      it 'renders #index' do
-        expect(subject).to render_template :index
-      end
+      it { is_expected.to render_template :index }
     end
   end
 
@@ -174,6 +183,42 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       end
 
       it { is_expected.to render_template :edit }
+    end
+  end
+
+  context 'when #destroy' do
+
+    context 'when post exists' do
+      subject { delete :destroy, :id => saved_post }
+
+      context 'when current user matches to post' do
+        before { sign_in saved_post.user }
+
+        it 'destroys' do
+          expect { subject }.to change(Post, :count).by(-1)
+        end
+
+        it { is_expected.to redirect_to blogs_root_path }
+      end
+
+      context 'when current user doesn\'t match to post' do
+        before { sign_in user }
+
+        it 'doesn\'t destroy' do
+
+          expect { subject }.to_not change(Post, :count)
+        end
+
+        it { is_expected.to redirect_to blogs_root_path}
+      end
+    end
+
+    context 'when post doesn\'t exist' do
+      before { sign_in user }
+
+      subject { delete :destroy, :id => saved_post }
+
+      it { is_expected.to redirect_to blogs_root_path }
     end
   end
 end
