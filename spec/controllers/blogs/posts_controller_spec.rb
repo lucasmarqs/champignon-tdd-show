@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Blogs::PostsController, :type => :controller do
 
   let(:user){ create(:user) }
-  let(:post){ create(:post) }
 
   context 'when #index' do
     subject { get :index }
@@ -49,5 +48,41 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       end
     end  
   end
+ 
+  context 'when #create' do
+    context 'with params' do
+      it do
+        is_expected.to permit(:title, 
+          :content,
+          :user_id).for(:create, params: { post: attributes_for(:post) })
+      end
+    end
 
+    context 'with valid attributes' do
+
+      it 'creates a new post' do
+        expect do
+          post :create, post: attributes_for(:post)
+        end.to change(Post, :count).by(1)
+      end
+
+      it 'redirects to index' do
+        post :create, post: attributes_for(:post)
+        expect(response).to redirect_to blogs_root_path
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'doesn\'t create post' do
+        expect do
+          post :create, post: attributes_for(:post).except(:title)
+        end.to_not change(Post, :count)
+      end
+
+      it 'renders new' do
+        post :create, post: attributes_for(:post).except(:title)
+        expect(response).to render_template(:new)
+      end
+    end
+  end
 end

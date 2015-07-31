@@ -5,7 +5,7 @@ FactoryGirl.define do
   end
 
   factory :post do
-    title Faker::Lorem.sentence(3)
+    title Faker::Lorem.sentence(1)
     content Faker::Lorem.characters(140)
     user
   end
