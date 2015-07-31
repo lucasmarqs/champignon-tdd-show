@@ -136,4 +136,44 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       end
     end
   end
+
+  context 'when #update' do
+
+    before { sign_in user }
+
+    context 'with params' do
+
+      it do
+        is_expected.to permit(:title, 
+          :content, 
+          :user_id).for(:update, params: { :id => saved_post, post: attributes_for(:post) })
+      end
+    end
+
+    context "with valid attributes" do
+
+      before do
+        @new_title = Faker::Lorem.sentence(1)
+        patch :update, :id => saved_post, post: attributes_for(:post, title: @new_title)
+      end
+
+      it "updates a post" do
+        expect(Post.find(saved_post.id).title).to eq(@new_title)
+      end
+
+      it "redirects to #show" do
+        expect(response).to redirect_to blogs_path saved_post     
+      end
+    end
+
+    context "with invalid attributes" do
+      before { patch :update, :id => saved_post, post: attributes_for(:post, title: nil) }
+
+      it 'doesn\'t update a post' do
+        expect(Post.find(saved_post.id).title).to eq(saved_post.title)
+      end
+
+      it { is_expected.to render_template :edit }
+    end
+  end
 end

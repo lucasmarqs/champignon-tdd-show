@@ -1,5 +1,6 @@
 class Blogs::PostsController < BlogsController
-  before_action :set_post, only: [:show, :edit]
+  before_action :set_post, only: [:show, :edit, :update]
+
   before_action :authenticate_user!, only: [:create, :new, :edit]
 
   def index
@@ -23,6 +24,14 @@ class Blogs::PostsController < BlogsController
 
   def edit
     render :index if current_user.id != @post.user.id
+  end
+
+  def update
+    if @post.update(post_params)
+      redirect_to blogs_path @post
+    else
+      render :edit
+    end
   end
 
   private
