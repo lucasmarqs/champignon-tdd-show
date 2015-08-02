@@ -24,8 +24,10 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       end
 
       context "with collection data" do
+
+        before { create_list :post, 3 }
+
         it "renders template" do
-          create_list :post, 3
           expect(subject).to render_template(:index)
         end
       end
@@ -37,14 +39,17 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     before { sign_in user }
 
     it 'assigns @post' do
-      get :new 
+      get :new
+
       expect(assigns(:post)).to be_a_new(Post)
     end
 
     context "when rendering views" do
       render_views
+
       it "renders template" do
         get :new
+
         expect(response).to render_template(:new)
       end
     end  
@@ -64,30 +69,24 @@ RSpec.describe Blogs::PostsController, :type => :controller do
 
     context 'with valid attributes' do
 
+      subject { post :create, post: attributes_for(:post) }
+
       it 'creates a new post' do
-        expect do
-          post :create, post: attributes_for(:post)
-        end.to change(Post, :count).by(1)
+        expect { subject }.to change(Post, :count).by(1)
       end
 
-      it 'redirects to index' do
-        post :create, post: attributes_for(:post)
-        expect(response).to redirect_to blogs_root_path
-      end
+      it { is_expected.to redirect_to blogs_root_path }
     end
 
     context 'with invalid attributes' do
 
+      subject { post :create, post: attributes_for(:post).except(:title) }
+
       it 'doesn\'t create post' do
-        expect do
-          post :create, post: attributes_for(:post).except(:title)
-        end.to_not change(Post, :count)
+        expect { subject }.to_not change(Post, :count)
       end
 
-      it 'renders new' do
-        post :create, post: attributes_for(:post).except(:title)
-        expect(response).to render_template(:new)
-      end
+      it { is_expected.to render_template :new }
     end
   end
 
@@ -107,6 +106,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
   end
 
   context 'when #edit' do
+
     context 'when post exists' do
       
       subject { get :edit, id: saved_post }
@@ -117,6 +117,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
 
         it 'assigns @post' do
           get :edit, id: saved_post
+
           expect(assigns(:post)).to eq(saved_post)
         end
 
@@ -189,9 +190,11 @@ RSpec.describe Blogs::PostsController, :type => :controller do
   context 'when #destroy' do
 
     context 'when post exists' do
+
       subject { delete :destroy, :id => saved_post }
 
       context 'when current user matches to post' do
+
         before { sign_in saved_post.user }
 
         it 'destroys' do
@@ -202,6 +205,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       end
 
       context 'when current user doesn\'t match to post' do
+
         before { sign_in user }
 
         it 'doesn\'t destroy' do
@@ -209,11 +213,12 @@ RSpec.describe Blogs::PostsController, :type => :controller do
           expect { subject }.to_not change(Post, :count)
         end
 
-        it { is_expected.to redirect_to blogs_root_path}
+        it { is_expected.to redirect_to blogs_root_path }
       end
     end
 
     context 'when post doesn\'t exist' do
+      
       before { sign_in user }
 
       subject { delete :destroy, :id => saved_post }
