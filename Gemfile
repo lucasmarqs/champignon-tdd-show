@@ -14,6 +14,7 @@ gem 'haml'
 gem 'devise'
 gem 'factory_girl_rails'
 gem 'faker'
+gem 'materialize-sass'
 
 group :development, :test do
   gem 'byebug'

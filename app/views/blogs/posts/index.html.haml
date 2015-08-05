@@ -1,1 +1,24 @@
-%h1 #Index
+.container
+  .row
+    .card-panel.teal.blue-grey-text.text-lighten-5
+      %h1 Blogs
+      - if user_signed_in?
+        = link_to 'Sign out', destroy_user_session_path, class: "waves-effect waves-light btn", method: :delete
+      - else
+        = link_to 'Sign in', new_user_session_path, class: "waves-effect waves-light btn"
+  
+  - @posts.each do |post|
+    .row
+      .col.s12
+        .card.teal.lighten-5.hoverable
+          .card-content.teal-text.text-darken-3
+            %span.card-title.teal-text.text-darken-4
+              = post.title
+            %blockquote= post.content
+            %p
+              %small= post.user.email
+          - if user_signed_in?
+            - if post.user.id == current_user.id
+              .card-action
+                = link_to 'Edit', action: :edit, id: post, id: post
+                = link_to 'Delete', blogs_post_destroy_path(post), method: :delete
