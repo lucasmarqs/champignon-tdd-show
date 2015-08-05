@@ -36,7 +36,10 @@ class Blogs::PostsController < BlogsController
   end
 
   def destroy
-    @post.destroy if current_user.id == @post.id
+    if @post
+      @post.destroy if current_user.id == @post.user.id
+    end
+
     redirect_to blogs_root_path
   end
 

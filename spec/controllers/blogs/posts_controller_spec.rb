@@ -210,7 +210,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
 
         it 'doesn\'t destroy' do
 
-          expect { subject }.to_not change(Post, :count)
+          expect(Post.find_by(id: saved_post.id)).to_not be_nil
         end
 
         it { is_expected.to redirect_to blogs_root_path }
@@ -221,7 +221,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       
       before { sign_in user }
 
-      subject { delete :destroy, :id => saved_post }
+      subject { delete :destroy, :id => Faker::Number.number(3) }
 
       it { is_expected.to redirect_to blogs_root_path }
     end
