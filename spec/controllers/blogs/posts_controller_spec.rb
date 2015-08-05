@@ -5,7 +5,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
   let(:user){ create(:user) }
   let(:saved_post){ create(:post) }
 
-  context 'when #index' do
+  describe '#index' do
     subject { get :index }
 
     it { expect(subject).to be_success }
@@ -34,7 +34,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     end
   end
 
-  context 'when #new' do
+  describe '#new' do
 
     before { sign_in user }
 
@@ -55,7 +55,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     end  
   end
  
-  context 'when #create' do
+  describe '#create' do
 
     before { sign_in user }
 
@@ -90,7 +90,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     end
   end
 
-  context 'when #show' do
+  describe '#show' do
 
     before { get :show, id: saved_post }
 
@@ -105,7 +105,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     end
   end
 
-  context 'when #edit' do
+  describe '#edit' do
 
     context 'when post exists' do
       
@@ -147,7 +147,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     end
   end
 
-  context 'when #update' do
+  describe '#update' do
 
     before { sign_in user }
 
@@ -187,7 +187,7 @@ RSpec.describe Blogs::PostsController, :type => :controller do
     end
   end
 
-  context 'when #destroy' do
+  describe '#destroy' do
 
     context 'when post exists' do
 

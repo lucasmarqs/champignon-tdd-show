@@ -1,0 +1,22 @@
+.container
+  .row
+    %h1 Sign in
+
+  .row
+    = form_for resource, as: resource_name, url: session_path(resource_name), html: { class: "col s12" } do |f|
+      .row
+        .input-field.col.s12
+          = f.email_field :email, class: "validate"
+          = f.label :email
+      .row
+        .input-field.col.s12
+          = f.password_field :password, autocomplete: "off", class: "validate"
+          = f.label :password
+
+      .row
+        .col.s12
+          = f.button "Log in", type: 'submit', class: "btn waves-effect waves-light"
+
+  .row
+    .col.s12
+      = render "devise/shared/links"
