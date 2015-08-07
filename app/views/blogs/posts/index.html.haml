@@ -20,5 +20,5 @@
           - if user_signed_in?
             - if post.user.id == current_user.id
               .card-action
-                = link_to 'Edit', action: :edit, id: post, id: post
+                = link_to 'Edit', action: :edit, id: post
                 = link_to 'Delete', blogs_post_destroy_path(post), method: :delete
