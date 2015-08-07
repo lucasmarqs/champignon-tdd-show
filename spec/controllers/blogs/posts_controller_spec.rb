@@ -38,6 +38,17 @@ RSpec.describe Blogs::PostsController, :type => :controller do
         end
         get :index
         expect(response).to render_template(:index)
+
+      context "without collection data" do
+
+        it { is_expected.to render_template(:index) }
+      end
+
+      context "with collection data" do
+
+        before { create_list :post, 3 }
+
+        it { is_expected.to render_template(:index) }
       end
     end
   end
@@ -224,10 +235,16 @@ RSpec.describe Blogs::PostsController, :type => :controller do
   #         sign_in user
   #       end
 
+<<<<<<< HEAD
   #       it 'doesn\'t destroy' do
 
   #         expect { subject }.to_not change(Post, :count)
   #       end
+=======
+        it 'doesn\'t destroy' do
+          expect(Post.find_by(id: saved_post.id)).to_not be_nil
+        end
+>>>>>>> dev
 
   #       it { is_expected.to redirect_to blogs_root_path }
   #     end
