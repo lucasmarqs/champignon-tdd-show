@@ -18,18 +18,15 @@ RSpec.describe Blogs::PostsController, :type => :controller do
       render_views
 
       context "without collection data" do
-        it "renders template" do
-          expect(subject).to render_template(:index)
-        end
+
+        it { is_expected.to render_template(:index) }
       end
 
       context "with collection data" do
 
         before { create_list :post, 3 }
 
-        it "renders template" do
-          expect(subject).to render_template(:index)
-        end
+        it { is_expected.to render_template(:index) }
       end
     end
   end
@@ -209,7 +206,6 @@ RSpec.describe Blogs::PostsController, :type => :controller do
         before { sign_in user }
 
         it 'doesn\'t destroy' do
-
           expect(Post.find_by(id: saved_post.id)).to_not be_nil
         end
 
